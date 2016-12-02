@@ -21,6 +21,20 @@ __all__        = ["EventEmitter"]
 
 # python imports
 from time import time
+try:
+    from time import perf_counter
+except:
+    from time import clock as perf_counter
+
+
+class Priority(object):
+    realtime = 0
+    veryhigh = 1
+    high     = 2
+    normal   = 3
+    low      = 4
+    verylow  = 5
+    idle     = 6
 
 
 class EventEmitter(object):
@@ -96,7 +110,7 @@ class EventEmitter(object):
         for i in indexes:
             listeners.pop(i)
 
-    def on(self, event, func=None, ttl=-1):
+    def on(self, event, func=None, ttl=-1, prio=Priority.normal):
         """
         Registers a function to an event. When *func* is *None*, decorator
         usage is assumed. *ttl* defines the times to listen. Negative values
@@ -120,7 +134,7 @@ class EventEmitter(object):
             if 0 <= self.max_listeners <= len(listeners):
                 return func
 
-            listener = Listener(func, event, ttl)
+            listener = Listener(func, event, ttl, prio)
             listeners.append(listener)
 
             if self.new_listener:
@@ -144,7 +158,7 @@ class EventEmitter(object):
             kwargs["ttl"] = 1
         return self.on(*args, **kwargs)
 
-    def on_any(self, func=None):
+    def on_any(self, func=None, prio=Priority.normal):
         """
         Registers a function that is called every time an event is emitted.
         When *func* is *None*, decorator usage is assumed. Returns the function.
@@ -158,7 +172,7 @@ class EventEmitter(object):
             if 0 <= self.max_listeners <= len(listeners):
                 return func
 
-            listener = Listener(func, None, -1)
+            listener = Listener(func, None, -1, prio)
             listeners.append(listener)
 
             if self.new_listener:
@@ -287,7 +301,7 @@ class EventEmitter(object):
 
 class Listener(object):
 
-    def __init__(self, func, event, ttl):
+    def __init__(self, func, event, ttl, prio):
         """
         The Listener class.
         Listener instances are simple structs to handle functions and their ttl
@@ -298,8 +312,7 @@ class Listener(object):
         self.func  = func
         self.event = event
         self.ttl   = ttl
-
-        self.time = time()
+        self.time  = (prio, time() + perf_counter())
 
     def __call__(self, *args, **kwargs):
         """

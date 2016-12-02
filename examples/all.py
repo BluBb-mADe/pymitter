@@ -9,7 +9,8 @@ base = os.path.normpath(os.path.join(os.path.abspath(__file__), "../.."))
 sys.path.insert(0, base)
 
 # create an EventEmitter instance
-from pymitter import EventEmitter
+from pymitter import EventEmitter, Priority
+
 ee = EventEmitter(wildcard=True, new_listener=True, max_listeners=-1)
 
 
@@ -17,25 +18,40 @@ ee = EventEmitter(wildcard=True, new_listener=True, max_listeners=-1)
 def on_new(func, event=None):
     print("added listener", event, func)
 
+
 @ee.on("foo")
 def handler_foo1(arg):
     print("foo handler 1 called with", arg)
+
 
 @ee.on("foo")
 def handler_foo2(arg):
     print("foo handler 2 called with", arg)
 
+
+@ee.on("foo", prio=Priority.veryhigh)
+def handler_foovh(arg):
+    print("foo handler vh called with", arg)
+
+
+@ee.on("foo", prio=Priority.realtime)
+def handler_foort(arg):
+    print("foo handler rt called with", arg)
+
+
 @ee.on("foo.*", ttl=1)
 def handler_fooall(arg):
     print("foo.* handler called with", arg)
+
 
 @ee.on("foo.bar")
 def handler_foobar(arg):
     print("foo.bar handler called with", arg)
 
+
 @ee.on_any()
 def handler_any(*args, **kwargs):
-    print("called every time")
+    print("called every time with", args[0])
 
 
 print("emit foo")
