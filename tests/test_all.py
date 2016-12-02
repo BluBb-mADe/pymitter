@@ -14,7 +14,7 @@ sys.path.append(base)
 
 
 # local imports
-from pymitter import EventEmitter
+from pymitter import EventEmitter, Priority
 
 
 class AllTestCase(unittest.TestCase):
@@ -58,6 +58,26 @@ class AllTestCase(unittest.TestCase):
 
         self.ee1.emit("1_ttl", "bar")
         self.assertTrue(self.stack[-1] == "1_ttl_foo")
+
+    def test_1_prio(self):
+        del self.stack[:]
+
+        @self.ee1.on("1_prio", prio=Priority.low)
+        def handler_low(arg):
+            self.stack.append("1_prio_low_" + arg)
+
+        @self.ee1.on("1_prio", prio=Priority.high)
+        def handler_high(arg):
+            self.stack.append("1_prio_high_" + arg)
+
+        @self.ee1.on("1_prio")
+        def handler(arg):
+            self.stack.append("1_prio_" + arg)
+
+        self.ee1.emit("1_prio", "foo")
+        self.assertTrue(self.stack[0] == "1_prio_high_foo")
+        self.assertTrue(self.stack[1] == "1_prio_foo")
+        self.assertTrue(self.stack[-1] == "1_prio_low_foo")
 
     def test_2_on_all(self):
         @self.ee2.on("2_on_all.*")
