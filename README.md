@@ -13,16 +13,11 @@ https://github.com/asyncly/EventEmitter2 providing namespaces, wildcards and TTL
 
 
 #### Installation
-<del>
-*pymitter* is a registered [PyPI module](https://pypi.python.org/pypi/pymitter), so the installation
-with *pip* is quite easy:
 
-```console
-pip install pymitter
-```
-</del>
+~~*pymitter* is a registered [PyPI module](https://pypi.python.org/pypi/pymitter), so the installation
+with *pip* is quite easy~~
 
-This fork is not on PyPI.
+This fork is not on PyPI!
 
 ## Examples
 
