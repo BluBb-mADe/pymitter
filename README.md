@@ -207,9 +207,7 @@ class Priority(object):
 ## Development
 
 - Original source hosted at [GitHub](https://github.com/riga/pymitter)
-- <del>Python module hostet at [PyPI](https://pypi.python.org/pypi/pymitter)</del> (This is a fork)
-- Report issues, questions, feature requests on
-  [GitHub Issues](https://github.com/BluBb-mADe/pymitter/issues)
+- ~~Python module hostet at [PyPI](https://pypi.python.org/pypi/pymitter)~~ (This is a fork)
 
 
 ## License
@@ -240,6 +238,3 @@ THE SOFTWARE.
 ## Authors
 Original:
 Marcel R. ([riga](https://github.com/riga))
-
-Fork:
-[BluBb-mADe](https://github.com/BluBb-mADe)
