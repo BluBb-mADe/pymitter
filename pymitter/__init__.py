@@ -23,7 +23,7 @@ __all__        = ["EventEmitter"]
 from time import time
 try:
     from time import perf_counter
-except:
+except ImportError:
     from time import clock as perf_counter
 
 
