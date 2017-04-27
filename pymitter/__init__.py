@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 
 """
@@ -23,7 +23,7 @@ __all__        = ["EventEmitter"]
 from time import time
 try:
     from time import perf_counter
-except:
+except ImportError:
     from time import clock as perf_counter
 
 
@@ -77,7 +77,7 @@ class EventEmitter(object):
         a special item *__CBKEY* that holds registered functions. All other
         items are used to build a tree structure.
         """
-        return { cls.__CBKEY: [] }
+        return {cls.__CBKEY: []}
 
     def __find_branch(self, event):
         """
@@ -110,7 +110,7 @@ class EventEmitter(object):
         for i in indexes:
             listeners.pop(i)
 
-    def on(self, event, func=None, ttl=-1, prio=Priority.normal):
+    def on(self, event, funct=None, ttl=-1, prio=Priority.normal):
         """
         Registers a function to an event. When *func* is *None*, decorator
         usage is assumed. *ttl* defines the times to listen. Negative values
@@ -142,8 +142,8 @@ class EventEmitter(object):
 
             return func
 
-        if func is not None:
-            return _on(func)
+        if funct is not None:
+            return _on(funct)
         else:
             return _on
 
@@ -153,12 +153,13 @@ class EventEmitter(object):
         function.
         """
         if len(args) == 3:
+            args = list(args)
             args[2] = 1
         else:
             kwargs["ttl"] = 1
         return self.on(*args, **kwargs)
 
-    def on_any(self, func=None, prio=Priority.normal):
+    def on_any(self, funct=None, prio=Priority.normal):
         """
         Registers a function that is called every time an event is emitted.
         When *func* is *None*, decorator usage is assumed. Returns the function.
@@ -180,12 +181,12 @@ class EventEmitter(object):
 
             return func
 
-        if func is not None:
-            return _on_any(func)
+        if funct is not None:
+            return _on_any(funct)
         else:
             return _on_any
 
-    def off(self, event, func=None):
+    def off(self, event, funct=None):
         """
         Removes a function that is registered to an event. When *func* is
         *None*, decorator usage is assumed. Returns the function.
@@ -199,12 +200,12 @@ class EventEmitter(object):
 
             return func
 
-        if func is not None:
-            return _off(func)
+        if funct is not None:
+            return _off(funct)
         else:
             return _off
 
-    def off_any(self, func=None):
+    def off_any(self, funct=None):
         """
         Removes a function that was registered via *on_any*. When *func* is
         *None*, decorator usage is assumed. Returns the function.
@@ -214,8 +215,8 @@ class EventEmitter(object):
 
             return func
 
-        if func is not None:
-            return _off_any(func)
+        if funct is not None:
+            return _off_any(funct)
         else:
             return _off_any
 
@@ -291,12 +292,12 @@ class EventEmitter(object):
         for b in branches:
             listeners.extend(b[self.__CBKEY])
 
-        listeners.sort(key=lambda l: l.time)
+        listeners.sort(key=lambda li: li.time)
 
         remove = [l for l in listeners if not l(*args, **kwargs)]
 
         for l in remove:
-            self.off(l.event, func=l.func)
+            self.off(l.event, funct=l.func)
 
 
 class Listener(object):

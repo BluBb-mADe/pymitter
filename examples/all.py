@@ -56,12 +56,14 @@ def handler_any(*args, **kwargs):
 
 print("emit foo")
 ee.emit("foo", "test")
-print(10 * "-")
+print(20 * "-")
 
 print("emit foo.bar")
 ee.emit("foo.bar", "test")
-print(10 * "-")
+print(20 * "-")
 
 print("emit foo.*")
 ee.emit("foo.*", "test")
-print(10 * "-")
+print(20 * "-")
+
+ee.emit("bullshit", "bullshit")
